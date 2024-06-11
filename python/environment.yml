@@ -1,0 +1,15 @@
+name: PDFRag
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - faiss-cpu=1.7.3=he781eb1_0
+  - python=3.10.14=h5ee71fb_1
+  - pip:
+    - faiss==1.7.3
+    - fastapi==0.103.0
+    - fastapi-cli==0.0.4
+    - numpy==1.26.4
+    - openai==1.25.0
+    - pip==24.0
+    - uvicorn==0.30.1
