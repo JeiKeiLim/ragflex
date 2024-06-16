@@ -20,6 +20,7 @@ class FileUploadButton extends StatefulWidget {
 class FileUploadButtonState extends State<FileUploadButton> {
   Uint8List? _fileBytes;
   String? _fileName;
+  String? _filePath;
   String _fileNameText = '';
 
   final UploadCallback onUploadSuccess;
@@ -27,14 +28,18 @@ class FileUploadButtonState extends State<FileUploadButton> {
   FileUploadButtonState({required this.onUploadSuccess});
 
   Uint8List? get fileBytes => _fileBytes;
+
   String? get fileName => _fileName;
 
   Future pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
 
+    print("result: $result");
+
     if (result != null) {
       _fileBytes = result.files.single.bytes;
       _fileName = result.files.single.name;
+      _filePath = result.files.single.path;
 
       uploadFile();
     } else {
@@ -43,13 +48,20 @@ class FileUploadButtonState extends State<FileUploadButton> {
   }
 
   Future uploadFile() async {
-    if (_fileBytes == null || _fileName == null) {
+    if ((_fileBytes == null && _filePath == null) || _fileName == null) {
       onUploadSuccess(false, fileName == null ? '' : fileName!);
       return;
     }
 
     var request = http.MultipartRequest('POST', Uri.parse(ApiUrls.uploadFile.url));
-    request.files.add(await http.MultipartFile.fromBytes('file', _fileBytes!, filename: _fileName!));
+    if (_fileBytes != null) {
+      request.files.add(await http.MultipartFile.fromBytes(
+          'file', _fileBytes!, filename: _fileName!));
+    }
+    else if (_filePath != null) {
+      request.files.add(await http.MultipartFile.fromPath(
+          'file', _filePath!));
+    }
     var res = await request.send();
 
     if (res.statusCode == 200) {
