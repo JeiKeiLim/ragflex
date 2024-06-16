@@ -1,9 +1,11 @@
-name: PDFRag
+name: ragflex
 channels:
   - conda-forge
   - defaults
 dependencies:
   - faiss-cpu=1.7.3=he781eb1_0
+  - pypdf2=2.10.5
+  - python-multipart=0.0.6
   - python=3.10.14=h5ee71fb_1
   - pip:
     - faiss==1.7.3
