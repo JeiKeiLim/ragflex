@@ -1,9 +1,10 @@
 
 import 'package:flutter/material.dart';
-import 'package:pdfrag/view/main/bottom_input_bar.dart';
-import 'package:pdfrag/view/main/message_list.dart';
+import 'package:ragflex/view/main/bottom_input_bar.dart';
+import 'package:ragflex/view/main/file_upload_button.dart';
+import 'package:ragflex/view/main/message_list.dart';
 
-import 'api/pdfrag_api.dart';
+import 'api/ragflex_api.dart';
 
 void main() {
   runApp(const MyApp());
@@ -38,25 +39,44 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String query = "";
   List<String> messages = [];
-  final pdfRagApi = PDFRagApi();
+  final ragFlexApi = RagFlexApi();
+
+  late InputRow bottomInputBar;
+
+  @override
+  void initState() {
+    super.initState();
+    bottomInputBar = InputRow(
+      onChanged: (value) {
+        setState(() {
+          query = value;
+        });
+      },
+      onPressed: fetchResponse,
+    );
+  }
 
   Future<void> fetchResponse() async {
     if (mounted) {
       setState(() {
+        bottomInputBar.setEnabled(false);
         messages.add('Q: $query');
       });
     }
 
     print('Fetching response for $query');
     try {
-      final response = await pdfRagApi.fetchResponse(query);
+      final response = await ragFlexApi.fetchResponse(query);
       print('Response: $response');
+      bottomInputBar.setEnabled(true);
+
       if (mounted) {
         setState(() {
           messages.add('A: $response');
         });
       }
     } catch (e) {
+      bottomInputBar.setEnabled(true);
       if (mounted) {
         setState(() {
           messages.add('A: Failed to fetch response');
@@ -77,17 +97,15 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
+            FileUploadButton(
+              onUploadSuccess: (success, fileName) {
+                print('File upload success: $success, $fileName');
+              },
+            ),
             MessageList(
               messages: messages,
             ),
-            InputRow(
-              onChanged: (value) {
-                setState(() {
-                  query = value;
-                });
-              },
-              onPressed: fetchResponse,
-            ),
+            bottomInputBar,
             Text("Hello $query"),
           ],
         ),

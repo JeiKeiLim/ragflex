@@ -8,6 +8,10 @@ class MessageList extends StatelessWidget {
     required this.messages,
   });
 
+  void clearMessages() {
+    messages.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
