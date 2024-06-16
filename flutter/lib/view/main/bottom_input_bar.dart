@@ -28,6 +28,8 @@ class InputRow extends StatefulWidget {
   void setEnabled(bool enabled) {
     stateKey.currentState?.setEnabled(enabled);
   }
+
+  bool get isEnabled => stateKey.currentState?._isEnabled ?? false;
 }
 
 class InputRowState extends State<InputRow> {

@@ -57,6 +57,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<void> fetchResponse() async {
+    if (bottomInputBar.isEnabled == false) {
+      return;
+    }
+
     if (mounted) {
       setState(() {
         bottomInputBar.setEnabled(false);
