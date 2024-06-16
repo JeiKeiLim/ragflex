@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class MessageList extends StatelessWidget {
+class MessageList extends StatefulWidget {
   final List<String> messages;
 
   const MessageList({
@@ -13,12 +13,37 @@ class MessageList extends StatelessWidget {
   }
 
   @override
+  _MessageListState createState() => _MessageListState();
+}
+
+class _MessageListState extends State<MessageList> {
+  final ScrollController _controller = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.jumpTo(_controller.position.maxScrollExtent);
+    });
+  }
+
+  @override
+  void didUpdateWidget(MessageList oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _controller.animateTo(_controller.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 200), curve: Curves.easeOut);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Expanded(
       child: ListView.builder(
-        itemCount: messages.length,
+        controller: _controller,
+        itemCount: widget.messages.length,
         itemBuilder: (context, index) {
-          Color color = (messages[index].startsWith("Q:"))
+          Color color = (widget.messages[index].startsWith("Q:"))
               ? const Color(0xFFE0E0E0)
               : const Color(0xFFB3E5FC);
           return Container(
@@ -28,7 +53,7 @@ class MessageList extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
               child: ListTile(
-                title: Text(messages[index]),
+                title: Text(widget.messages[index]),
               ));
         },
       ),

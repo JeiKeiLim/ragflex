@@ -34,8 +34,6 @@ class FileUploadButtonState extends State<FileUploadButton> {
   Future pickFile() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
 
-    print("result: $result");
-
     if (result != null) {
       _fileBytes = result.files.single.bytes;
       _fileName = result.files.single.name;
