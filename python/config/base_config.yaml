@@ -1,0 +1,8 @@
+app:
+  host: 127.0.0.1
+  port: 8000
+
+defaults:
+  - embedding/openai
+indexer: faiss
+engine: openai

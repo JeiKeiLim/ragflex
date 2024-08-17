@@ -6,6 +6,7 @@ import os
 
 from typing import List, Union
 
+
 class ContextManager:
     CACHE_ROOT = tempfile.gettempdir()
 
@@ -17,7 +18,7 @@ class ContextManager:
         self._embeddings = self._get_embeddings()
 
     def _split_text_into_lines(self, text: str) -> List[str]:
-        """ Split the text into lines.
+        """Split the text into lines.
 
         This is useful for splitting the text into lines when we want to get the embeddings for each line.
         @TODO: This should be done in a more efficient way.
@@ -31,7 +32,7 @@ class ContextManager:
         return [line for line in text.split("\n") if line != ""]
 
     def _get_embeddings(self) -> np.ndarray:
-        """ Get the embeddings for the text.
+        """Get the embeddings for the text.
 
         Embeddings are cached to disk.
         """
@@ -45,9 +46,9 @@ class ContextManager:
         np.save(cache_path, embeddings)
 
         return embeddings
-    
+
     def text_at(self, index: Union[int, List[int]]) -> str:
-        """ Get the text at the given index.
+        """Get the text at the given index.
 
         Args:
             index: The index of the text to get.
@@ -60,18 +61,18 @@ class ContextManager:
             return self._split_text[index]
         else:
             return "\n".join([self._split_text[i] for i in index])
-        
+
     @property
     def embeddings(self) -> np.ndarray:
         return self._embeddings
-    
+
     @property
     def text(self) -> str:
         return self._text
 
 
 def get_embeddings(client: openai.OpenAI, text: Union[str, List[str]]) -> np.ndarray:
-    """ Get the embeddings for the text.
+    """Get the embeddings for the text.
 
     Args:
         client: The OpenAI client.
@@ -86,10 +87,14 @@ def get_embeddings(client: openai.OpenAI, text: Union[str, List[str]]) -> np.nda
     if len(input_text) < 1024:
         input_texts = [input_text]
     else:
-        input_texts = [input_text[i:i + 1024] for i in range(0, len(input_text), 1024)]
+        input_texts = [
+            input_text[i : i + 1024] for i in range(0, len(input_text), 1024)
+        ]
 
     for input_text in input_texts:
-        response =  client.embeddings.create(input = input_text, model="text-embedding-ada-002")
+        response = client.embeddings.create(
+            input=input_text, model="text-embedding-ada-002"
+        )
         embeddings += [res.embedding for res in response.data]
 
     return np.array(embeddings)

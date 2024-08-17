@@ -1,5 +1,5 @@
-from scripts.pdf_processor import PDFProcessor
-from scripts.embedding import get_embeddings, ContextManager
+from scripts.content_extractor.pdf_extractor import PDFExtractor
+from scripts.embedding.embedding import get_embeddings, ContextManager
 from scripts.indexing import FaissIndexer
 from scripts.openai_query import OpenAIQuery
 
@@ -17,7 +17,7 @@ if __name__ == "__main__":
 
     pdf_path = "res/2023_연말정산.pdf"
 
-    pdf_processor = PDFProcessor(pdf_path)
+    pdf_processor = PDFExtractor(pdf_path)
     context_manager = ContextManager(client, pdf_processor.pdf_text)
     openai_query = OpenAIQuery(client)
     faiss_indexer = FaissIndexer(context_manager.embeddings)
