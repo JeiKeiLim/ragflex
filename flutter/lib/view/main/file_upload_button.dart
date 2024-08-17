@@ -73,7 +73,6 @@ class FileUploadButtonState extends State<FileUploadButton> {
       onUploadSuccess(true, fileName!);
     } else {
       onUploadSuccess(false, fileName!);
-
     }
   }
 

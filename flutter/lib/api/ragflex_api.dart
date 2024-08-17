@@ -10,7 +10,7 @@ class RagFlexApi {
     final url = ApiUrls.query.uri;
     final data = {
       "query": query,
-      "context": {"k": 100, "distance_threshold": 0.5}
+      "params": {"k": 100, "distance_threshold": 0.5}
     };
 
     final response = await http.post(

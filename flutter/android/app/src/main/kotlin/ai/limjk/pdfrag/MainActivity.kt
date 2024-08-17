@@ -1,4 +1,4 @@
-package ai.limjk.pdfrag
+package ai.limjk.ragflex
 
 import io.flutter.embedding.android.FlutterActivity
 
