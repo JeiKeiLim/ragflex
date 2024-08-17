@@ -1,34 +1,44 @@
-from scripts.pdf_processor import PDFProcessor
-from scripts.embedding import get_embeddings, ContextManager
-from scripts.indexing import FaissIndexer
-from scripts.openai_query import OpenAIQuery
+"""Example of main script to run the pipeline without FastAPI.
 
-import openai
-import os
+ - Author: Jongkuk Lim
+ - Contact: lim.jeikei@gmail.com
+"""
 
-if __name__ == "__main__":
-    # Retrieve the OPENAPI_KEY from the system environment
-    openapi_key = os.getenv("OPENAI_API_KEY")
-    if openapi_key is None:
-        print("OPENAI_API_KEY is not set")
-        exit(1)
+import hydra
 
-    client = openai.OpenAI(api_key=openapi_key)
+from omegaconf import DictConfig
+
+from scripts.content_extractor.pdf_extractor import PDFExtractor
+from scripts.embedding import embedding_manager_factory
+from scripts.indexing import indexing_manager_factory
+from scripts.model import model_manager_factory
+
+
+@hydra.main(version_base=None, config_path="config", config_name="base_config")
+def main(config: DictConfig):
+    print(config)
 
     pdf_path = "res/2023_연말정산.pdf"
+    pdf_processor = PDFExtractor(pdf_path)
 
-    pdf_processor = PDFProcessor(pdf_path)
-    context_manager = ContextManager(client, pdf_processor.pdf_text)
-    openai_query = OpenAIQuery(client)
-    faiss_indexer = FaissIndexer(context_manager.embeddings)
+    embedding_manager = embedding_manager_factory(
+        config.embedding, pdf_processor.content
+    )
+    indexing_manager = indexing_manager_factory(
+        config.indexing, embedding_manager.embeddings
+    )
+    model_manager = model_manager_factory(config.model)
 
     query = "연말정산 어떻게 진행되는지 알려줘"
-    query_embedding = get_embeddings(client, query)
+    query_embedding = embedding_manager.generate_embeddings(query)
 
-    index = faiss_indexer.search(query_embedding, 10)
+    index = indexing_manager.query(query_embedding)
+    context = embedding_manager.text_at(index)
 
-    context = context_manager.text_at(index)
-
-    response = openai_query.query(context, query)
+    response = model_manager.query(context, query)
 
     print(response)
+
+
+if __name__ == "__main__":
+    main()

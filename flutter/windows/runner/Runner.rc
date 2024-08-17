@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "ai.limjk" "\0"
-            VALUE "FileDescription", "pdfrag" "\0"
+            VALUE "FileDescription", "ragflex" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "pdfrag" "\0"
+            VALUE "InternalName", "ragflex" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 ai.limjk. All rights reserved." "\0"
-            VALUE "OriginalFilename", "pdfrag.exe" "\0"
-            VALUE "ProductName", "pdfrag" "\0"
+            VALUE "OriginalFilename", "ragflex.exe" "\0"
+            VALUE "ProductName", "ragflex" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

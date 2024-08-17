@@ -1,6 +1,6 @@
 {
-    "name": "pdfrag",
-    "short_name": "pdfrag",
+    "name": "ragflex",
+    "short_name": "ragflex",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

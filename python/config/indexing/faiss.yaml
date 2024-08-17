@@ -1,0 +1,7 @@
+class_name: FaissIndexer
+params:
+  index_type: "IndexFlatL2"
+  distance_threshold: 0.5
+  k: 100
+
+

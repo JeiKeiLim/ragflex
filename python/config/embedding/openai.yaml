@@ -1,0 +1,4 @@
+class_name: "OpenAIEmbedding"
+params:
+  max_batch_size: 1024
+  embedding_model: "text-embedding-ada-002"

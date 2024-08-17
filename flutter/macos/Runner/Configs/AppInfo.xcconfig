@@ -5,10 +5,10 @@
 // 'flutter create' template.
 
 // The application's name. By default this is also the title of the Flutter window.
-PRODUCT_NAME = pdfrag
+PRODUCT_NAME = ragflex
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = ai.limjk.pdfrag
+PRODUCT_BUNDLE_IDENTIFIER = ai.limjk.ragflex
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2024 ai.limjk. All rights reserved.
