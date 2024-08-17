@@ -49,10 +49,9 @@ class FastAPIApp:
         content = await file.read()
         pdf_processor = PDFExtractor(content)
 
-        if self._embedding_manager is None:
-            self._embedding_manager = embedding_manager_factory(
-                self._config.embedding, pdf_processor.content
-            )
+        self._embedding_manager = embedding_manager_factory(
+            self._config.embedding, pdf_processor.content
+        )
 
         self._index_manager = indexing_manager_factory(
             self._config.indexing, self._embedding_manager.embeddings
