@@ -2,6 +2,15 @@
 
 RAGFlex is a flexible Retrieval Augmented Generation (RAG) framework that allows you to configure pipeline with [hydra](https://hydra.cc/) configuration files with [FastAPI](https://fastapi.tiangolo.com/) as the backend and [flutter](https://flutter.dev/) as the frontend.
 
+## Features
+- Configure RAG pipeline with hydra configuration files
+- Use FastAPI as the backend
+- Use flutter as the frontend
+
+
+## Quick look
+<img src="./docs/ragflex_demo.gif" width="400">
+
 
 # Getting started
 ## Setup with conda
