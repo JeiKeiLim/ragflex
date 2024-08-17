@@ -1,0 +1,5 @@
+class_name: "OpenAIModel"
+params:
+  model_name: "gpt-3.5-turbo"
+  temperature: 0.1
+  prompt: "You are a helpful assistant. You answer the question based on the context provided. The context might look fragmented, but you should make it more readable by parsing the context and summarizing it."

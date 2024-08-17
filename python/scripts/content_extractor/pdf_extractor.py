@@ -3,6 +3,7 @@
  - Author: Jongkuk Lim
  - Contact: lim.jeikei@gmail.com
 """
+
 from scripts.content_extractor.base_extractor import BaseExtractor
 
 import PyPDF2
@@ -31,7 +32,6 @@ class PDFExtractor(BaseExtractor):
         Returns:
             The cleaned, extracted text from the PDF.
         """
-        # import pdb; pdb.set_trace()
         # Open the PDF file
         if isinstance(pdf, str):
             file = open(pdf, "rb")

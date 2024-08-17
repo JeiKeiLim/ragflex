@@ -3,10 +3,10 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - faiss-cpu=1.7.3=he781eb1_0
+  - faiss-cpu=1.7.3
   - pypdf2=2.10.5
   - python-multipart=0.0.6
-  - python=3.10.14=h5ee71fb_1
+  - python=3.10.14
   - pip:
     - faiss==1.7.3
     - fastapi==0.103.0

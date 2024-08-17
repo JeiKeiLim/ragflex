@@ -1,3 +1,9 @@
+"""Base content extractor class.
+
+ - Author: Jongkuk Lim
+ - Contact: lim.jeikei@gmail.com
+"""
+
 from abc import ABC, abstractmethod
 
 from typing import Union

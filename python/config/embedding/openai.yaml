@@ -1,4 +1,4 @@
-token_size: 1024
-token_type: bpe
-vocab_size: 50257
-model: "text-embedding-ada-002"
+class_name: "OpenAIEmbedding"
+params:
+  max_batch_size: 1024
+  embedding_model: "text-embedding-ada-002"

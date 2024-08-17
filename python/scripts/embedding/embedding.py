@@ -1,17 +1,35 @@
-import openai
+"""Embedding manager module.
+
+ - Author: Jongkuk Lim
+ - Contact: lim.jeikei@gmail.com
+"""
+
 import numpy as np
 import hashlib
 import tempfile
 import os
 
+from abc import ABC, abstractmethod
+from omegaconf import DictConfig
+
 from typing import List, Union
 
 
-class ContextManager:
+class EmbeddingManager(ABC):
+    """Embedding manager class.
+
+    This abstract class is responsible for managing the embeddings for the text.
+    """
+
     CACHE_ROOT = tempfile.gettempdir()
 
-    def __init__(self, client: openai.OpenAI, text: str):
-        self._client = client
+    def __init__(self, text: str):
+        """Initialize the embedding manager.
+
+        Args:
+            client: The OpenAI client.
+            text: The text to get the embeddings for.
+        """
         self._text = text
         self._text_hash = hashlib.sha256(text.encode()).hexdigest()
         self._split_text = self._split_text_into_lines(text)
@@ -42,10 +60,35 @@ class ContextManager:
             print(f"Loading embeddings from {cache_path}")
             return np.load(cache_path)
 
-        embeddings = get_embeddings(self._client, self._split_text)
+        embeddings = self._generate_embeddings(self._split_text)
         np.save(cache_path, embeddings)
 
         return embeddings
+
+    def generate_embeddings(self, split_texts: Union[List[str], str]) -> np.ndarray:
+        """Get the embeddings of texts list.
+
+        ex) split_texts = ["Hello, world!", "How are you?"]
+            return np.array([[0.1, 0.2, ...], [0.3, 0.4, ...]])
+
+        Returns:
+            The embeddings for each text.
+        """
+        if isinstance(split_texts, str):
+            input_texts = [split_texts]
+        else:
+            input_texts = split_texts
+
+        return self._generate_embeddings(input_texts)
+
+    @abstractmethod
+    def _generate_embeddings(self, split_texts: List[str]) -> np.ndarray:
+        """Get the embeddings of texts list.
+
+        Returns:
+            The embeddings for each text.
+        """
+        pass
 
     def text_at(self, index: Union[int, List[int]]) -> str:
         """Get the text at the given index.
@@ -71,30 +114,19 @@ class ContextManager:
         return self._text
 
 
-def get_embeddings(client: openai.OpenAI, text: Union[str, List[str]]) -> np.ndarray:
-    """Get the embeddings for the text.
+def embedding_manager_factory(config: DictConfig, text: str) -> EmbeddingManager:
+    """Create an embedding manager for the given text.
 
     Args:
-        client: The OpenAI client.
-        text: The text to get the embeddings for.
+        text: The text to create the embedding manager for.
 
     Returns:
-        The embeddings for the text.
+        The embedding manager.
     """
-    input_text = [text] if isinstance(text, str) else text
-    embeddings = []
-
-    if len(input_text) < 1024:
-        input_texts = [input_text]
-    else:
-        input_texts = [
-            input_text[i : i + 1024] for i in range(0, len(input_text), 1024)
-        ]
-
-    for input_text in input_texts:
-        response = client.embeddings.create(
-            input=input_text, model="text-embedding-ada-002"
-        )
-        embeddings += [res.embedding for res in response.data]
-
-    return np.array(embeddings)
+    try:
+        return getattr(
+            __import__("scripts.embedding", fromlist=[""]),
+            config.class_name
+        )(text=text, **config.params)
+    except AttributeError:
+        raise ValueError(f"Invalid embedding manager class: {config.class_name}")
